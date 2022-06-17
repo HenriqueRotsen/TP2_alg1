@@ -1,13 +1,55 @@
 #include "mapa.hpp"
 
-void inicializaD(Mapa m, int d, int p, int s)
+using namespace std;
+
+void Dijkstra(Grafo g, int s)
 {
-    for (int i = 0; i < m.getVertices(); i++)
+    int size = g.getTam();
+    vector<int> peso;
+    peso.resize(size);
+    vector<int> ant;
+    ant.resize(size);
+    
+    for (int i = 0; i < size; i++)
     {
-        d[i] = INT_MAX/2;
-        p[i] = -1;
+        peso[i] = -(INT_MAX / 2);
+        ant[i] = -1;
     }
-    d[s] = 0;    
+
+    peso[s] = 0;
+    list<pair<int, int>> q;
+    pair<int, int> aux;
+
+    for (int i = 0; i < size; i++)
+    {
+        aux = make_pair(peso[i], i);
+        q.push_back(aux);
+    }
+    q.sort();
+
+    int u, v; 
+    int alt;
+    while (q.size() != 0)
+    {
+        u = q.front().second;
+        q.pop_front();
+        if (peso[u] == -(INT_MAX/2))
+        {
+            break;
+        }
+        
+        for (int i = 0; i < g.getNumV(u); i++)
+        {
+            v = g.getVert(u, i);
+            alt = max(peso[i], min(peso[u], g.getPeso(u,v)));
+            if (alt > peso[v])
+            {
+                peso[v] = alt;
+                ant[v] = u;
+                
+            }
+        }
+    }
 }
 
 int main()
@@ -16,26 +58,30 @@ int main()
     cin >> n;
     assert(2 <= n && n <= 100);
     cin >> m;
-    assert(1 <= m && m <= min(n*(n-1), 1000));
+    assert(1 <= m && m <= min(n * (n - 1), 1000));
     cin >> q;
     assert(1 <= q && q <= 1000);
 
     int u, v, w;
-    Rodovia r;
-    Mapa mg(n, m);
-    for (int i = 0; i < m; i++)
+    Grafo g(n);
+    pair<int, int> aux;
+
+    for (int k = 0; k < m; k++)
     {
         cin >> u;
         assert(1 <= u);
-        r.setU(u);
         cin >> v;
         assert(v <= n && v != u);
-        r.setV(v);
         cin >> w;
         assert(1 <= w && w <= 100000);
-        r.setPeso(w);
-        mg.addRodovia(r, u-1, v-1);
+        g.addRodovia(u, v, w);
     }
 
-
+    int source, dest;
+    for (int i = 0; i < q; i++)
+    {
+        cin >> source;
+        cin >> dest;
+        Dijkstra(g, source-1);
+    }
 }

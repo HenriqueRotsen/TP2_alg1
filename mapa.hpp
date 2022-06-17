@@ -3,51 +3,64 @@
 #include <string>
 #include <vector>
 #include <limits.h>
-
-using namespace std;
+#include <queue>
+#include <map>
+#include <list>
+#include <utility>
+#include <functional>
 
 #ifndef MAPA_H
 #define MAPA_H
 
-class Rodovia
-{
-private:
-    int pesoMax;
-    int u;
-    int v;
-public:
-    Rodovia(){pesoMax = 0; u =-1; v = -1;};
-    void setPeso(int p) { this->pesoMax = p; };
-    int getPeso() { return pesoMax; };
-    void setU(int u) { this->u = u; };
-    int getU() { return u; };
-    void setV(int v) { this->v = v; };
-    int getV() { return v; };
-};
+using namespace std;
 
-class Mapa
+class Grafo
 {
 private:
-    Rodovia r;
     int n;
-    int m;
-    vector<vector<Rodovia>> mapa;
+    map<int, vector<pair<int, int>>> adj;
+
 public:
-    Mapa(int n, int m) {
+    Grafo(int n)
+    {
         this->n = n;
-        this->m = m;
-        mapa.resize(n, vector<Rodovia>(m)); 
     };
 
-    int getVertices() { return n*m; };
-
-    void addRodovia(Rodovia r, int x, int y) {
-        mapa[x][y] = r;
+    int getTam()
+    {
+        return this->adj.size();
     };
 
+    void addRodovia(int u, int v, int w)
+    {
+        pair<int, int> aux;
+        aux = make_pair(v-1, w);
+        adj[u-1].push_back(aux);
+    };
 
+    int getNumV(int v)
+    {
+        return adj[v].size();
+    };
+
+    int getPeso(int u, int v)
+    {
+        int resp = -(INT_MAX / 2);
+        for (int i = 0; i < adj[u].size(); i++)
+        {
+            if (adj[u][i].first == v)
+            {
+                resp = adj[u][i].second;
+                break;
+            }
+        }
+        return resp;
+    };
+
+    int getVert(int u, int i)
+    {
+        return adj[u][i].first;
+    };
 };
-
-
 
 #endif

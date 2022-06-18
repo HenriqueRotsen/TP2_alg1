@@ -2,54 +2,48 @@
 
 using namespace std;
 
-void Dijkstra(Grafo g, int s)
+vector<int> Dijkstra(Grafo g, int s)
 {
-    int size = g.getTam();
+    int size = g.getN();
     vector<int> peso;
     peso.resize(size);
     vector<int> ant;
     ant.resize(size);
-    
+
     for (int i = 0; i < size; i++)
     {
         peso[i] = -(INT_MAX / 2);
         ant[i] = -1;
     }
 
-    peso[s] = 0;
-    list<pair<int, int>> q;
-    pair<int, int> aux;
+    peso[s] = INT_MAX / 2;
+    priority_queue<pair<int, int>> q;
+    q.push(make_pair(peso[s], s));
 
-    for (int i = 0; i < size; i++)
-    {
-        aux = make_pair(peso[i], i);
-        q.push_back(aux);
-    }
-    q.sort();
-
-    int u, v; 
+    int u, v;
     int alt;
-    while (q.size() != 0)
+    while (!q.empty())
     {
-        u = q.front().second;
-        q.pop_front();
-        if (peso[u] == -(INT_MAX/2))
+        u = q.top().second;
+        q.pop();
+        if (peso[u] == -(INT_MAX / 2))
         {
             break;
         }
-        
+
         for (int i = 0; i < g.getNumV(u); i++)
         {
             v = g.getVert(u, i);
-            alt = max(peso[i], min(peso[u], g.getPeso(u,v)));
+            alt = max(peso[v], min(peso[u], g.getPeso(u, v)));            
             if (alt > peso[v])
             {
                 peso[v] = alt;
                 ant[v] = u;
-                
+                q.push(make_pair(peso[v], v));
             }
         }
     }
+    return peso;
 }
 
 int main()
@@ -78,10 +72,12 @@ int main()
     }
 
     int source, dest;
+    vector<int> resp;
     for (int i = 0; i < q; i++)
     {
         cin >> source;
         cin >> dest;
-        Dijkstra(g, source-1);
+        resp = g.Dijkstra(source - 1);
+        cout << resp[dest - 1] << endl;
     }
 }

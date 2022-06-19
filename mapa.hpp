@@ -5,7 +5,6 @@
 #include <limits.h>
 #include <queue>
 #include <map>
-#include <list>
 #include <utility>
 #include <functional>
 
@@ -26,45 +25,12 @@ public:
         this->n = n;
     };
 
-    int getTam()
-    {
-        return this->adj.size();
-    };
-
-    int getN()
-    {
-        return this->n;
-    };
-
+    // Acrescenta uma rodovia r de A --> B
     void addRodovia(int u, int v, int w)
     {
         pair<int, int> aux;
         aux = make_pair(v - 1, w);
         adj[u - 1].push_back(aux);
-    };
-
-    int getNumV(int v)
-    {
-        return adj[v].size();
-    };
-
-    int getPeso(int u, int v)
-    {
-        int resp = -(INT_MAX / 2);
-        for (int i = 0; i < adj[u].size(); i++)
-        {
-            if (adj[u][i].first == v)
-            {
-                resp = adj[u][i].second;
-                break;
-            }
-        }
-        return resp;
-    };
-
-    int getVert(int u, int i)
-    {
-        return adj[u][i].first;
     };
 
     vector<int> Dijkstra(int s)
@@ -99,12 +65,9 @@ public:
             vector<pair<int, int>>::iterator i;
             for (i = adj[u].begin(); i != adj[u].end(); ++i)
             {
-                // Get vertex label and weight of current adjacent
-                // of u.
                 v = (*i).first;
                 alt = max(peso[v], min(peso[u], (*i).second));
 
-                //  If there is shorted path to v through u.
                 if (alt > peso[v])
                 {
                     peso[v] = alt;

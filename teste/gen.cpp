@@ -47,9 +47,9 @@ void dfs(int i){
 
 void tc(int seed){
     srand(seed);
-    int N = 10;
-    int V = 90;
-    int Q = 10;
+    int N = 100;
+    int V = 1000;
+    int Q = 1000;
     vector<tuple<int,int,int>> graph;
     forC(i,2,N+1){
         int v = rand()%(i-1) +1;
